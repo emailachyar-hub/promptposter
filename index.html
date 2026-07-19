@@ -60,6 +60,14 @@
         border-radius: 8px;
       }
 
+      select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 6px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+      }
+
       input[type="range"] {
         width: 100%;
         margin-top: 8px;
@@ -189,6 +197,11 @@
           <label>
             Logo
 
+            <select id="logoSelect">
+              <option value="upload" selected>Upload</option>
+              <option value="puskesmas-labanan.png">Puskesmas Labanan</option>
+            </select>
+
             <input type="file" id="logoFile" accept="image/*" />
           </label>
 
@@ -223,6 +236,40 @@
 
       const bg = new Image();
       const logo = new Image();
+      const logoSelect = document.getElementById("logoSelect");
+
+      logoSelect.onchange = () => {
+        if (logoSelect.value === "upload") {
+          logoFile.style.display = "block";
+          return;
+        }
+
+        logoFile.style.display = "none";
+
+        logo.onload = () => {
+          logoOk = true;
+
+          const ratio = logo.width / logo.height;
+
+          lw = bg.width * 0.7;
+
+          size.value = Math.round(lw);
+
+          lh = lw / ratio;
+
+          lx = (bg.width - lw) / 2;
+
+          ly = 0;
+
+          redraw();
+        };
+
+        logo.onerror = () => {
+          alert("Logo tidak ditemukan");
+        };
+
+        logo.src = logoSelect.value;
+      };
 
       let bgOk = false;
       let logoOk = false;
