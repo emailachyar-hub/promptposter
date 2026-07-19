@@ -26,12 +26,14 @@
       }
 
       .left {
-        width: 340px;
+    width: 340px;
+    height: calc(100vh - 40px);
+    overflow-y: auto;
 
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-      }
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
       .panel {
         background: #fff;
@@ -174,6 +176,24 @@
     margin: 3px 0 0;
     font-size: 12px;   /* sebelumnya 16px */
     font-weight: normal;
+}
+.left::-webkit-scrollbar{
+    width:8px;
+}
+
+.left::-webkit-scrollbar-thumb{
+    background:#bdbdbd;
+    border-radius:20px;
+}
+
+.left::-webkit-scrollbar-thumb:hover{
+    background:#999;
+}
+.panel:first-child{
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
 }
     </style>
   </head>
