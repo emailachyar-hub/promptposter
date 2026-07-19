@@ -25,14 +25,12 @@
         gap: 20px;
       }
 
-      .left {
-    width: 340px;
-    height: calc(100vh - 40px);
-    overflow-y: auto;
+      .left{
+    width:340px;
+    height:calc(100vh - 40px);
 
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    display:flex;
+    flex-direction:column;
 }
 
       .panel {
@@ -195,6 +193,21 @@
     z-index: 100;
     background: white;
 }
+.menu{
+    flex:1;
+    overflow-y:auto;
+    padding-right:6px;
+    margin-top:20px;   /* jarak dari logo */
+}
+
+.menu::-webkit-scrollbar{
+    width:8px;
+}
+
+.menu::-webkit-scrollbar-thumb{
+    background:#bdbdbd;
+    border-radius:20px;
+}
     </style>
   </head>
 
@@ -214,6 +227,8 @@
 
 </div> <!-- tutup panel logo -->
 
+<div class="menu">
+        
 <div class="panel">
   
 <label>
@@ -278,6 +293,7 @@
           </p>
         </div>
       </div>
+  </div>
 
       <div class="right">
         <div class="canvasPanel">
