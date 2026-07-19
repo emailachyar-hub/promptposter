@@ -187,12 +187,7 @@
 .left::-webkit-scrollbar-thumb:hover{
     background:#999;
 }
-.panel:first-child{
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: white;
-}
+
 .menu{
     flex:1;
     overflow-y:auto;
@@ -208,13 +203,18 @@
     background:#bdbdbd;
     border-radius:20px;
 }
+
+.headerPanel{
+    flex-shrink: 0;
+    margin-bottom: 20px;
+}
     </style>
   </head>
 
   <body>
     <div class="wrap">
       <div class="left">
-        <div class="panel">
+        <div class="panel headerPanel">
 
     <div class="judul">
     <img src="logo-kecil.png" class="logo" alt="Logo">
