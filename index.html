@@ -152,13 +152,29 @@
         font-weight: bold;
       }
 
-      .judulLogo {
-        width: 160px;
-        height: 160px;
-        object-fit: contain;
-        vertical-align: middle;
-        margin-right: 8px;
-      }
+      .judul {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.logo {
+    width: 80px;
+    height: auto;
+}
+
+.teks h2 {
+    margin: 0;
+    font-size: 28px;
+    line-height: 1.2;
+}
+
+.teks p {
+    margin: 5px 0 0;
+    font-size: 16px;
+    font-weight: normal;
+}
     </style>
   </head>
 
@@ -166,10 +182,15 @@
     <div class="wrap">
       <div class="left">
         <div class="panel">
-          <h2>
-            <img src="logo-kecil.png" class="Promkes Labanan" />
-            PROMPT POSTER By Promkes Labanan Labanan
-          </h2>
+
+    <div class="judul">
+        <img src="logo-kecil.png" class="logo" alt="Logo">
+
+        <div class="teks">
+            <h2>PROMPT POSTER</h2>
+            <p>By Promkes Labanan</p>
+        </div>
+    </div>
 
           <label>
             Isi Materi
