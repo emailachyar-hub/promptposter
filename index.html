@@ -2508,85 +2508,130 @@ Output berupa gambar siap publikasi Instagram.`;
         if (e.key === "Escape") closePosterModal();
       });
 
-      /* SHARE DIRECT SOSMED */
-      async function sharePoster(platform) {
-        if (!bgOk)
-          return showInAppToast("Upload poster terlebih dahulu!", "#dc2626");
+      /* SHARE POSTER SEBAGAI GAMBAR LOKAL */
+async function sharePoster(platform) {
+  if (!bgOk) {
+    showInAppToast(
+      "Upload poster terlebih dahulu!",
+      "#dc2626"
+    );
+    return;
+  }
 
-        const dataUrl = canvas.toDataURL("image/png");
+  try {
+    // Pastikan Canvas sudah memiliki hasil poster terbaru
+    redraw();
 
-        if (platform === "more") {
-          if (navigator.share) {
-            try {
-              const blob = await (await fetch(dataUrl)).blob();
-              const file = new File([blob], "poster_promkes.png", {
-                type: "image/png",
-              });
-              await navigator.share({
-                title: "Poster Promosi Kesehatan",
-                text: "Poster Promosi Kesehatan dari TPKIP.COM",
-                files: [file],
-              });
-              showInAppToast("Berhasil membagikan poster!");
-              return;
-            } catch (err) {
-              console.log("Pengiriman dibatalkan:", err);
-            }
+    // Ambil poster dari Canvas sebagai gambar PNG
+    const blob = await new Promise((resolve, reject) => {
+      canvas.toBlob(
+        (result) => {
+          if (result) {
+            resolve(result);
+          } else {
+            reject(
+              new Error("Gagal membuat file gambar.")
+            );
           }
-          const a = document.createElement("a");
-          a.download = "poster_promkes.png";
-          a.href = dataUrl;
-          a.click();
-          showInAppToast("Poster diunduh! Silakan bagikan secara manual.");
+        },
+        "image/png",
+        1.0
+      );
+    });
+
+    // Buat file gambar lokal
+    const file = new File(
+      [blob],
+      "poster_tpkipdotcom.png",
+      {
+        type: "image/png",
+        lastModified: Date.now(),
+      }
+    );
+
+    // Coba share sebagai FILE GAMBAR
+    if (
+      navigator.share &&
+      navigator.canShare &&
+      navigator.canShare({
+        files: [file],
+      })
+    ) {
+      try {
+        await navigator.share({
+          title: "Poster Promosi Kesehatan",
+          text: "Poster Promosi Kesehatan dari TPKIP.COM",
+          files: [file],
+        });
+
+        showInAppToast(
+          "Berhasil membagikan poster sebagai gambar!"
+        );
+
+        return;
+      } catch (shareError) {
+        // Jika pengguna menekan tombol batal
+        if (
+          shareError &&
+          shareError.name === "AbortError"
+        ) {
+          showInAppToast(
+            "Berbagi poster dibatalkan."
+          );
           return;
         }
 
-        if (platform === "facebook") {
-          window.open(
-            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`,
-            "_blank",
-          );
-          showInAppToast(
-            "Membuka Facebook. Jangan lupa unduh poster untuk diunggah!",
-          );
-        } else if (platform === "whatsapp") {
-          const text = encodeURIComponent(
-            "Poster Promosi Kesehatan TPKIP: " + window.location.href,
-          );
-          window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
-          showInAppToast("Membuka WhatsApp!");
-        } else if (platform === "instagram") {
-          const a = document.createElement("a");
-          a.download = "poster_promkes.png";
-          a.href = dataUrl;
-          a.click();
-          showInAppToast("Gambar diunduh! Membuka Instagram...");
-          setTimeout(
-            () => window.open("https://www.instagram.com", "_blank"),
-            1200,
-          );
-        } else if (platform === "tiktok") {
-          const a = document.createElement("a");
-          a.download = "poster_promkes.png";
-          a.href = dataUrl;
-          a.click();
-          showInAppToast("Gambar diunduh! Membuka TikTok...");
-          setTimeout(
-            () => window.open("https://www.tiktok.com", "_blank"),
-            1200,
-          );
-        } else if (platform === "youtube") {
-          const a = document.createElement("a");
-          a.download = "poster_promkes.png";
-          a.href = dataUrl;
-          a.click();
-          showInAppToast("Gambar diunduh! Membuka YouTube...");
-          setTimeout(
-            () => window.open("https://www.youtube.com", "_blank"),
-            1200,
-          );
-        }
+        console.warn(
+          "Web Share gagal:",
+          shareError
+        );
       }
+    }
+
+    // Jika browser tidak mendukung Share File,
+    // otomatis download gambar
+    const downloadUrl =
+      URL.createObjectURL(blob);
+
+    const a =
+      document.createElement("a");
+
+    a.href = downloadUrl;
+    a.download =
+      "poster_tpkipdotcom.png";
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    a.remove();
+
+    setTimeout(() => {
+      URL.revokeObjectURL(downloadUrl);
+    }, 1000);
+
+    showInAppToast(
+      "Poster diunduh. Silakan bagikan gambar secara manual."
+    );
+
+  } catch (error) {
+    console.error(
+      "Gagal membagikan poster:",
+      error
+    );
+
+    showInAppToast(
+      "Gagal membagikan poster. Silakan coba lagi.",
+      "#dc2626"
+    );
+  }
+}
+
+document.getElementById("removeLogo").onclick = () => {
+  logoOk = false;
+  document.getElementById("btnDownloadPreview").style.display = "none";
+  redraw();
+};
 
       document.getElementById("removeLogo").onclick = () => {
         logoOk = false;
@@ -2601,7 +2646,7 @@ Output berupa gambar siap publikasi Instagram.`;
             "#dc2626",
           );
         const a = document.createElement("a");
-        a.download = "poster_promkes.png";
+        a.download = "poster_tpkipdotcom.png";
         a.href = canvas.toDataURL("image/png");
         a.click();
       }
