@@ -1120,7 +1120,7 @@
               <select id="logoSelect" size="1">
                 <option value="">Belum ada template</option>
                 <option value="Puskesmas Labanan Black.png">Puskesmas Labanan Black</option>
-                <option value="Puskesmas Labanan white.png">Puskesmas Labanan White</option>
+                <option value="Puskesmas Labanan White.png">Puskesmas Labanan White</option>
               </select>
             </label>
             <label
@@ -3287,6 +3287,23 @@ document.getElementById("removeLogo").onclick = () => {
       }
 
       updateLogoDropdown();
+      <script>
+  // ... kode JavaScript lama yang sudah ada ...
+  function openApp(appName) { ... }
+
+  // --- TAMBAHKAN KODE INI DI BAGIAN BAWAHNYA ---
+  document.getElementById("logoSelect").addEventListener("change", function(e) {
+      const selectedFile = e.target.value;
+      if (selectedFile !== "") {
+          const watermarkImg = new Image();
+          watermarkImg.src = selectedFile;
+          watermarkImg.onload = function() {
+              window.currentWatermarkImage = watermarkImg;
+              alert("Template " + selectedFile + " berhasil dipilih!");
+          };
+      }
+  });
+</script>
     </script>
-  </body>
+      </body>
 </html>
