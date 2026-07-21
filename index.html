@@ -540,7 +540,8 @@
         max-height: 85vh;
         object-fit: contain;
         transition: transform 0.05s ease-out;
-        transform-origin: center center;
+        transform-origin: 0 0;
+        will-change: transform;
         box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
         border-radius: 8px;
         pointer-events: none;
@@ -2416,8 +2417,13 @@ let modalTy = 0;
 
 let startDistance = 0;
 let startScale = 1;
-let startMidX = 0;
-let startMidY = 0;
+
+let pinchStartMid = { x: 0, y: 0 };
+let pinchStartTx = 0;
+let pinchStartTy = 0;
+
+let pinchImgLeft = 0;
+let pinchImgTop = 0;
 
 let isPanning = false;
       let panStartX = 0,
@@ -2448,6 +2454,7 @@ let isPanning = false;
 
       function updateModalTransform() {
         const img = document.getElementById("modalPosterImg");
+        const rect = img.getBoundingClientRect();
         if (img) {
           img.style.transform = `translate(${modalTx}px, ${modalTy}px) scale(${modalScale})`;
         }
@@ -2469,6 +2476,13 @@ function getDistance(touches) {
     const dx = touches[0].clientX - touches[1].clientX;
     const dy = touches[0].clientY - touches[1].clientY;
     return Math.sqrt(dx * dx + dy * dy);
+}
+
+function getMidpoint(touches) {
+    return {
+        x: (touches[0].clientX + touches[1].clientX) / 2,
+        y: (touches[0].clientY + touches[1].clientY) / 2
+    };
 }
       
       const modalContent = document.getElementById("modalImgContainer");
@@ -2524,10 +2538,18 @@ function getDistance(touches) {
 
     startDistance = getDistance(e.touches);
 
-    startScale = modalScale;
+startScale = modalScale;
 
-    startMidX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-    startMidY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+const img = document.getElementById("modalPosterImg");
+const rect = img.getBoundingClientRect();
+
+pinchStartMid = getMidpoint(e.touches);
+
+pinchStartTx = modalTx;
+pinchStartTy = modalTy;
+
+pinchImgLeft = rect.left;
+pinchImgTop = rect.top;
 
 }
 
@@ -2551,25 +2573,33 @@ function getDistance(touches) {
 
     if (e.touches.length === 2) {
 
-        const newDistance = getDistance(e.touches);
+      const newDistance = getDistance(e.touches);
 
-const newScale = Math.max(
+const scale = Math.max(
     0.5,
-    Math.min(8, startScale * (newDistance / startDistance))
+    Math.min(
+        8,
+        startScale * (newDistance / startDistance)
+    )
 );
 
-const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+const mid = getMidpoint(e.touches);
 
-const scaleRatio = newScale / modalScale;
+const imgX =
+    (pinchStartMid.x - pinchImgLeft) / startScale;
 
-modalTx = midX - (midX - modalTx) * scaleRatio;
-modalTy = midY - (midY - modalTy) * scaleRatio;
+const imgY =
+    (pinchStartMid.y - pinchImgTop) / startScale;
 
-modalScale = newScale;
+modalTx =
+    mid.x - pinchImgLeft - imgX * scale;
+
+modalTy =
+    mid.y - pinchImgTop - imgY * scale;
+
+modalScale = scale;
 
 updateModalTransform();
-
     }
 
 }, { passive:false });
