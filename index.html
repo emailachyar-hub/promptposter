@@ -1625,7 +1625,8 @@
         ✕
       </button>
       <div class="modal-hint">
-        💡 Scroll mouse: Zoom In/Out | Tahan Klik & Geser: Pan
+        💡 Desktop: Scroll = Zoom • Drag = Geser
+        📱 HP: Cubit 2 jari = Zoom • 1 jari = Geser
       </div>
       <div id="modalImgContainer" class="poster-modal-content">
         <img
@@ -2427,6 +2428,8 @@ let isPanning = false;
         modalScale = 1;
         modalTx = 0;
         modalTy = 0;
+        startDistance = 0;
+        startScale = 1;
         updateModalTransform();
         modal.style.display = "flex";
       }
@@ -2521,7 +2524,9 @@ function getDistance(touches) {
 
       modalContent.addEventListener("touchmove", (e) => {
 
-    e.preventDefault();
+     if (e.cancelable) {
+        e.preventDefault();
+    }
 
     if (e.touches.length === 1 && isPanning) {
 
@@ -2547,11 +2552,25 @@ function getDistance(touches) {
 
 }, { passive:false });
 
-      modalContent.addEventListener("touchend", () => {
+      modalContent.addEventListener("touchend", (e) => {
 
-    isPanning = false;
+    if (e.touches.length === 1) {
 
-    startDistance = 0;
+        isPanning = true;
+
+        panStartX = e.touches[0].clientX;
+        panStartY = e.touches[0].clientY;
+
+        initialTx = modalTx;
+        initialTy = modalTy;
+
+    } else {
+
+        isPanning = false;
+
+        startDistance = 0;
+
+    }
 
 });
 
