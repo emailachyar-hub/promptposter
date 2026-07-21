@@ -1118,7 +1118,8 @@
             <label
               >Pilih Template Tersimpan
               <select id="logoSelect" size="1">
-                <option value="">Belum ada template</option>
+                <option value="puskesmas-labanan-black.png">Puskesmas Labanan Black</option>
+                <option value="Puskesmas-Labanan-white.png">Puskesmas Labanan White</option>
               </select>
             </label>
             <label
@@ -3310,6 +3311,121 @@ document.getElementById("removeLogo").onclick = () => {
       }
 
       updateLogoDropdown();
+      // 1. Inisialisasi Elemen HTML
+      const logoSelect = document.getElementById("logoSelect");
+      const sizeInput = document.getElementById("size");
+      const removeLogoBtn = document.getElementById("removeLogo");
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const scrollCanvasWrapper = document.getElementById("scrollCanvasWrapper");
+      const dropZone = document.getElementById("dropZone");
+      const bgFileInput = document.getElementById("bgFile");
+
+      // Variabel Penyimpan Objek Gambar
+      let mainBgImage = null;       // Gambar Utama Poster
+      let watermarkImage = null;    // Gambar PNG Watermark
+
+      // 2. Fungsi Menggambar Ulang Canvas (Redraw Canvas)
+      function renderCanvas() {
+        if (!mainBgImage) return; // Jangan gambar jika background utama belum ada
+
+        // Set ukuran Canvas sesuai gambar utama
+        canvas.width = mainBgImage.width;
+        canvas.height = mainBgImage.height;
+
+        // Bersihkan canvas & gambar background utama
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(mainBgImage, 0, 0);
+
+        // Jika ada Watermark PNG yang dipilih, gambar ke atas Canvas
+        if (watermarkImage) {
+          // Ambil ukuran skala dari Slider #size
+          const targetWidth = parseInt(sizeInput.value, 10);
+          const aspectRatio = watermarkImage.height / watermarkImage.width;
+          const targetHeight = targetWidth * aspectRatio;
+
+          // Posisi Watermark (Contoh: Pojok Kanan Bawah dengan margin 20px)
+          const xPos = canvas.width - targetWidth - 20;
+          const yPos = canvas.height - targetHeight - 20;
+
+          // Gambar PNG Watermark
+          ctx.drawImage(watermarkImage, xPos, yPos, targetWidth, targetHeight);
+        }
+      }
+
+      // 3. EVENT: Memuat Gambar Utama (Background Poster)
+      bgFileInput.addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          const img = new Image();
+          img.onload = function () {
+            mainBgImage = img;
+            dropZone.style.display = "none";
+            scrollCanvasWrapper.style.display = "flex";
+            document.getElementById("posterControlsBar").style.display = "flex";
+            renderCanvas(); // Render canvas pertama kali
+          };
+          img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      // 4. EVENT UTAMA: Ketika Pilihan Dropdown Watermark Berubah
+      logoSelect.addEventListener("change", function () {
+        const selectedValue = this.value; // Berisi URL / Base64 dari PNG
+
+        if (!selectedValue) {
+          watermarkImage = null;
+          renderCanvas();
+          return;
+        }
+
+        // Buat Objek Image Baru untuk Watermark PNG
+        const img = new Image();
+        img.crossOrigin = "anonymous"; // Mencegah error CORS
+        
+        img.onload = function () {
+          watermarkImage = img;
+          renderCanvas(); // Render ulang canvas setelah PNG selesai dimuat
+        };
+
+        img.src = selectedValue;
+      });
+
+      // 5. EVENT: Mengubah Ukuran Watermark via Slider (#size)
+      sizeInput.addEventListener("input", function () {
+        renderCanvas();
+      });
+
+      // 6. EVENT: Tombol Hapus Watermark (#removeLogo)
+      removeLogoBtn.addEventListener("click", function () {
+        watermarkImage = null;
+        logoSelect.value = ""; // Reset dropdown ke pilihan kosong
+        renderCanvas();
+      });
+
+      // 7. Fungsi untuk Berpindah Tab Menu Kiri
+      function switchLeftFunction(tab) {
+        const btnPrompt = document.getElementById("btn-lfunc-prompt");
+        const btnWatermark = document.getElementById("btn-lfunc-watermark");
+        const panelPrompt = document.getElementById("promptFunctionPanel");
+        const panelWatermark = document.getElementById("watermarkFunctionPanel");
+
+        if (tab === 'prompt') {
+          btnPrompt.classList.add("active");
+          btnWatermark.classList.remove("active");
+          panelPrompt.style.display = "flex";
+          panelWatermark.style.display = "none";
+        } else {
+          btnWatermark.classList.add("active");
+          btnPrompt.classList.remove("active");
+          panelWatermark.style.display = "flex";
+          panelPrompt.style.display = "none";
+        }
+      }
     </script>
       </body>
 </html>
