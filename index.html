@@ -530,6 +530,7 @@
         justify-content: center;
         overflow: hidden;
         cursor: grab;
+        touch-action:none;
       }
       .poster-modal-content:active {
         cursor: grabbing;
@@ -2403,9 +2404,13 @@ Output berupa gambar siap publikasi Instagram.`;
 
       /* KACA PEMBESAR MODAL */
       let modalScale = 1;
-      let modalTx = 0;
-      let modalTy = 0;
-      let isPanning = false;
+let modalTx = 0;
+let modalTy = 0;
+
+let startDistance = 0;
+let startScale = 1;
+
+let isPanning = false;
       let panStartX = 0,
         panStartY = 0;
       let initialTx = 0,
@@ -2449,6 +2454,12 @@ Output berupa gambar siap publikasi Instagram.`;
         updateModalTransform();
       }
 
+function getDistance(touches) {
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+}
+      
       const modalContent = document.getElementById("modalImgContainer");
 
       modalContent.addEventListener(
@@ -2483,26 +2494,66 @@ Output berupa gambar siap publikasi Instagram.`;
       });
 
       modalContent.addEventListener("touchstart", (e) => {
-        if (e.touches.length === 1) {
-          isPanning = true;
-          panStartX = e.touches[0].clientX;
-          panStartY = e.touches[0].clientY;
-          initialTx = modalTx;
-          initialTy = modalTy;
-        }
-      });
+
+    if (e.touches.length === 1) {
+
+        isPanning = true;
+
+        panStartX = e.touches[0].clientX;
+        panStartY = e.touches[0].clientY;
+
+        initialTx = modalTx;
+        initialTy = modalTy;
+
+    }
+
+    if (e.touches.length === 2) {
+
+        isPanning = false;
+
+        startDistance = getDistance(e.touches);
+
+        startScale = modalScale;
+
+    }
+
+}, { passive:false });
 
       modalContent.addEventListener("touchmove", (e) => {
-        if (isPanning && e.touches.length === 1) {
-          modalTx = initialTx + (e.touches[0].clientX - panStartX);
-          modalTy = initialTy + (e.touches[0].clientY - panStartY);
-          updateModalTransform();
-        }
-      });
+
+    e.preventDefault();
+
+    if (e.touches.length === 1 && isPanning) {
+
+        modalTx = initialTx + (e.touches[0].clientX - panStartX);
+
+        modalTy = initialTy + (e.touches[0].clientY - panStartY);
+
+        updateModalTransform();
+
+    }
+
+    if (e.touches.length === 2) {
+
+        const newDistance = getDistance(e.touches);
+
+        modalScale = startScale * (newDistance / startDistance);
+
+        modalScale = Math.max(0.5, Math.min(8, modalScale));
+
+        updateModalTransform();
+
+    }
+
+}, { passive:false });
 
       modalContent.addEventListener("touchend", () => {
-        isPanning = false;
-      });
+
+    isPanning = false;
+
+    startDistance = 0;
+
+});
 
       window.addEventListener("keydown", (e) => {
         if (e.key === "Escape") closePosterModal();
