@@ -3496,31 +3496,38 @@ document.getElementById("removeLogo").onclick = () => {
     redraw();
 
 }
-      function downloadTemplateHD() {
+    function downloadTemplateHD() {
+
+    const header = document.getElementById("headerCanvas");
 
     const selected = document.querySelector(".image-object.selected");
-
     if (selected) {
         selected.classList.remove("selected");
     }
 
-    const header = document.getElementById("headerCanvas");
-}
-    html2canvas(header,{
-        backgroundColor:null,
-        scale:4,
-        useCORS:true
-    }).then(canvas=>{
+    // Tunggu browser me-render ulang
+    requestAnimationFrame(() => {
 
-        const a=document.createElement("a");
+        html2canvas(header, {
+            backgroundColor: null,
+            scale: 4,
+            useCORS: true
+        }).then(canvas => {
 
-        a.download="Header_Template.png";
+            const a = document.createElement("a");
+            a.download = "Header_Template.png";
+            a.href = canvas.toDataURL("image/png");
+            a.click();
 
-        a.href=canvas.toDataURL("image/png");
+            // Tampilkan lagi kotak seleksi
+            if (selected) {
+                selected.classList.add("selected");
+            }
 
-        a.click();
-if (selected) {
-    selected.classList.add("selected");
+        });
+
+    });
+
 }
     });
 
