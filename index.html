@@ -1940,7 +1940,7 @@
         document.getElementById("scrollCanvasWrapper").style.display = "none";
         document.getElementById("posterControlsBar").style.display = "none";
         document.getElementById("posterShareBar").style.display = "none";
-        document.getElementById("btnDownloadPreview").style.display = "none";
+        document.getElementById("btnDownloadPreview").style.display = "inline-flex";
         document.getElementById("bgFile").value = "";
         document.getElementById("logoSelect").value = "";
         document.getElementById("materi").value = "";
@@ -2350,7 +2350,7 @@ Output berupa gambar siap publikasi Instagram.`;
       logoSelect.onchange = () => {
         if (!logoSelect.value) {
           logoOk = false;
-          document.getElementById("btnDownloadPreview").style.display = "none";
+          document.getElementById("btnDownloadPreview").style.display = "inline-flex";
           redraw();
           return;
         }
@@ -2787,13 +2787,13 @@ async function sharePoster(platform) {
 
 document.getElementById("removeLogo").onclick = () => {
   logoOk = false;
-  document.getElementById("btnDownloadPreview").style.display = "none";
+  document.getElementById("btnDownloadPreview").style.display = "inline-flex";
   redraw();
 };
 
       document.getElementById("removeLogo").onclick = () => {
         logoOk = false;
-        document.getElementById("btnDownloadPreview").style.display = "none";
+        document.getElementById("btnDownloadPreview").style.display = "inline-flex";
         redraw();
       };
 
