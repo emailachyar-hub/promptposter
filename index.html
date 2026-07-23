@@ -1000,23 +1000,29 @@
 
 .preview-expand-btn{
 
-    width:36px;
+    position:absolute;
 
-    height:36px;
+    top:12px;
+
+    left:12px;
+
+    width:38px;
+
+    height:38px;
 
     border:none;
 
-    border-radius:8px;
+    border-radius:10px;
 
     background:#ffffff;
 
-    box-shadow:0 2px 8px rgba(0,0,0,.15);
+    box-shadow:0 2px 8px rgba(0,0,0,.25);
 
     cursor:pointer;
 
     font-size:20px;
 
-    transition:.2s;
+    z-index:9999;
 
 }
 
@@ -1265,7 +1271,8 @@
               />
             </div>
 
-<div class="preview-toolbar">
+            
+          <div class="canvas-container-scroll" id="scrollCanvasWrapper">
 
     <button
         id="btnExpandPreview"
@@ -1276,13 +1283,11 @@
         ⛶
     </button>
 
-</div>
-            
-            <div class="canvas-container-scroll" id="scrollCanvasWrapper">
-              <canvas id="canvas"></canvas>
-            </div>
+    <canvas id="canvas"></canvas>
 
-            <div id="posterShareBar" class="poster-share-bar">
+</div>
+
+<div id="posterShareBar" class="poster-share-bar">
               <span class="share-title">SHARE</span>
               <button
                 class="share-btn fb"
