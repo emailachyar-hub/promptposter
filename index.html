@@ -1588,13 +1588,13 @@
                     >
                       Hapus
                     </button>
-                    <button
-                      class="btn-header"
-                      style="background: #dc2626"
-                      onclick="clearAll()"
-                    >
-                      Hapus Semua
-                    </button>
+<button
+  class="btn-header"
+  style="background: #16a34a"
+  onclick="downloadTemplateHD()"
+>
+  📥 Download
+</button>
                     <div style="margin-left: auto; display: flex; gap: 4px">
                       <button
                         class="btn-header btn-tambah-baru"
@@ -3448,6 +3448,27 @@ document.getElementById("removeLogo").onclick = () => {
     }
 
     redraw();
+
+}
+      function downloadTemplateHD() {
+
+    const header = document.getElementById("headerCanvas");
+
+    html2canvas(header,{
+        backgroundColor:null,
+        scale:4,
+        useCORS:true
+    }).then(canvas=>{
+
+        const a=document.createElement("a");
+
+        a.download="Header_Template.png";
+
+        a.href=canvas.toDataURL("image/png");
+
+        a.click();
+
+    });
 
 }
     </script>
