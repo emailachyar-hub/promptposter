@@ -3498,8 +3498,14 @@ document.getElementById("removeLogo").onclick = () => {
 }
       function downloadTemplateHD() {
 
-    const header = document.getElementById("headerCanvas");
+    const selected = document.querySelector(".image-object.selected");
 
+    if (selected) {
+        selected.classList.remove("selected");
+    }
+
+    const header = document.getElementById("headerCanvas");
+}
     html2canvas(header,{
         backgroundColor:null,
         scale:4,
@@ -3513,7 +3519,9 @@ document.getElementById("removeLogo").onclick = () => {
         a.href=canvas.toDataURL("image/png");
 
         a.click();
-
+if (selected) {
+    selected.classList.add("selected");
+}
     });
 
 }
