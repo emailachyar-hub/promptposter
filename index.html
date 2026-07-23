@@ -2569,11 +2569,16 @@ let isPanning = false;
         startScale = 1;
         updateModalTransform();
         modal.style.display = "flex";
+        document.getElementById("btnExpandPreview").style.display = "none";
       }
 
-      function closePosterModal() {
-        document.getElementById("posterModalViewer").style.display = "none";
-      }
+     function closePosterModal() {
+
+    document.getElementById("posterModalViewer").style.display = "none";
+
+    document.getElementById("btnExpandPreview").style.display = "block";
+
+}
 
       function updateModalTransform() {
         const img = document.getElementById("modalPosterImg");
