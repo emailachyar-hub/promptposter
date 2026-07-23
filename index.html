@@ -1172,6 +1172,17 @@
                 <option value="">Belum ada template</option>
               </select>
             </label>
+
+            <label>
+  Upload Header PNG
+  <input
+    type="file"
+    id="uploadHeaderPNG"
+    accept=".png,.jpg,.jpeg"
+    onchange="uploadHeaderPNG(event)"
+  />
+</label>
+            
             <label
               >Ukuran Watermark
               <input type="range" id="size" min="20" max="2000" value="800" />
@@ -2358,7 +2369,9 @@ Output berupa gambar siap publikasi Instagram.`;
       const canvas = document.getElementById("canvas");
       const ctx = canvas.getContext("2d");
       const bg = new Image();
-      const logo = new Image();
+const logo = new Image();
+const uploadedHeader = new Image();
+
       const logoSelect = document.getElementById("logoSelect");
       const size = document.getElementById("size");
 
@@ -2371,7 +2384,40 @@ Output berupa gambar siap publikasi Instagram.`;
       let drag = false,
         dx = 0,
         dy = 0;
+function uploadHeaderPNG(event) {
 
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+
+        uploadedHeader.onload = function () {
+
+            logo.src = uploadedHeader.src;
+            logoOk = true;
+
+            const ratio = logo.width / logo.height;
+
+            lw = bg.width ? bg.width * 0.7 : 300;
+            size.value = Math.round(lw);
+
+            lh = lw / ratio;
+            lx = bg.width ? (bg.width - lw) / 2 : 0;
+            ly = 0;
+
+            redraw();
+
+        };
+
+        uploadedHeader.src = e.target.result;
+
+    };
+
+    reader.readAsDataURL(file);
+
+}
       function redraw() {
         if (!bgOk) return;
         canvas.width = bg.width;
