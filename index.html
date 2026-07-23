@@ -3289,24 +3289,28 @@ document.getElementById("removeLogo").onclick = () => {
       }
 
       function updateLogoDropdown() {
-        const sel = document.getElementById("logoSelect");
-        const templates = JSON.parse(
-          localStorage.getItem("headerTemplates") || "{}",
-        );
-        const names = Object.keys(templates).sort((a, b) =>
-          a.localeCompare(b, "id", { sensitivity: "base" }),
-        );
 
-        if (names.length === 0) {
-          sel.innerHTML = `<option value="">Belum ada template</option>`;
-        } else {
-          sel.innerHTML = `<option value="">-- Pilih Template Watermark --</option>`;
-          sel.innerHTML += `<option value="default_puskesmas">Puskesmas Labanan</option>`;
-          names.forEach((n) => {
-            if (templates[n].dataURL)
-              sel.innerHTML += `<option value="template_${n}">${n}</option>`;
-          });
-        }
+    const sel = document.getElementById("logoSelect");
+
+    const templates = JSON.parse(
+        localStorage.getItem("headerTemplates") || "{}"
+    );
+
+    const names = Object.keys(templates).sort((a, b) =>
+        a.localeCompare(b, "id", { sensitivity: "base" })
+    );
+
+    sel.innerHTML = `<option value="">-- Pilih Template Watermark --</option>`;
+
+    // Template bawaan
+    sel.innerHTML += `<option value="default_puskesmas">Puskesmas Labanan</option>`;
+
+    // Template yang disimpan user
+    names.forEach((n) => {
+        sel.innerHTML += `<option value="template_${n}">${n}</option>`;
+    });
+
+}
       }
 
       updateLogoDropdown();
