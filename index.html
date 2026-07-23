@@ -2356,6 +2356,30 @@ Output berupa gambar siap publikasi Instagram.`;
         }
 
         const templateNameKey = logoSelect.value.replace("template_", "");
+        if (logoSelect.value === "default_puskesmas") {
+
+    logo.onload = () => {
+
+        logoOk = true;
+
+        const ratio = logo.width / logo.height;
+
+        lw = bg.width ? bg.width * 0.7 : 300;
+
+        lh = lw / ratio;
+
+        lx = bg.width ? (bg.width - lw) / 2 : 0;
+
+        ly = 0;
+
+        redraw();
+
+    };
+
+    logo.src = "puskesmaslabananlogo.png";
+
+    return;
+}
         const templates = JSON.parse(
           localStorage.getItem("headerTemplates") || "{}",
         );
@@ -3277,6 +3301,7 @@ document.getElementById("removeLogo").onclick = () => {
           sel.innerHTML = `<option value="">Belum ada template</option>`;
         } else {
           sel.innerHTML = `<option value="">-- Pilih Template Watermark --</option>`;
+          sel.innerHTML += `<option value="default_puskesmas">Puskesmas Labanan</option>`;
           names.forEach((n) => {
             if (templates[n].dataURL)
               sel.innerHTML += `<option value="template_${n}">${n}</option>`;
