@@ -2048,15 +2048,20 @@
         if (panel === "poster") {
           document.getElementById("canvasContainer").style.display = "flex";
           document.getElementById("btn-view-poster").classList.add("active");
-        } else if (panel === "medsos") {
+       } else if (panel === "medsos") {
+
     document.getElementById("medsosContainer").style.display = "block";
     document.getElementById("btn-view-medsos").classList.add("active");
 
-    document.getElementById("medsosDropdownWrapper").style.display = "none";
+    document.getElementById("btn-medsos-add").classList.remove("active");
+    document.getElementById("btn-medsos-edit").classList.add("active");
+
+    document.getElementById("medsosDropdownWrapper").style.display = "block";
     document.getElementById("medsosFormWrapper").style.display = "none";
 
-    document.getElementById("btn-medsos-add").classList.remove("active");
-    document.getElementById("btn-medsos-edit").classList.remove("active");
+    renderMedsosPresetList();
+
+
 
         } else if (panel === "header") {
           document.getElementById("headerContainer").style.display = "flex";
