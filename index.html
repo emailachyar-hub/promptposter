@@ -3507,7 +3507,9 @@ document.getElementById("removeLogo").onclick = () => {
 
     // Tunggu browser me-render ulang
     requestAnimationFrame(() => {
+const handles = document.querySelectorAll(".resize-handle");
 
+handles.forEach(h => h.style.display = "none");
         html2canvas(header, {
             backgroundColor: null,
             scale: 4,
@@ -3518,6 +3520,7 @@ document.getElementById("removeLogo").onclick = () => {
             a.download = "Header_Template.png";
             a.href = canvas.toDataURL("image/png");
             a.click();
+          handles.forEach(h => h.style.display = "");
 
             // Tampilkan lagi kotak seleksi
             if (selected) {
